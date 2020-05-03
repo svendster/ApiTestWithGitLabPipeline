@@ -11,5 +11,6 @@ postman_tests:
         - npm install -g newman-reporter-html
         - newman run collection.json --reporters cli,html --reporter-html-export report.html
     artifacts:
+        when: always
         paths:
         - report.html
