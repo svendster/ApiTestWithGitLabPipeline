@@ -6,46 +6,51 @@
 	},
 	"item": [
 		{
-			"name": "GET httpbin.org",
+			"name": "Create new link",
 			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f6ce0fc3-da4c-4909-bc42-12a590df1650",
+						"exec": [
+							"pm.globals.set(\"variable_key\", \"variable_value\");",
+							"",
+							"",
+							"// This function searches for the variable across globals and the active environment.",
+							"//var value = pm.variables.get(\"variable_key\");"
+						],
+						"type": "text/javascript"
+					}
+				},
 				{
 					"listen": "test",
 					"script": {
-						"id": "eac54c9a-9794-48d7-a0bf-ff7215259328",
+						"id": "8dbc5760-ad5b-44a6-af84-cf244a362642",
 						"exec": [
-							"pm.test(\"Your test name\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.args.foo).to.eql(\"bar\");",
+							"//get new ID",
+							"pm.globals.set(\"globalid\", pm.response.json().id);",
+							"",
+							"//populate variable for use by other requests",
+							"console.log(pm.globals.get(\"globalid\"));",
+							"",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Confirm link was assigned to me\", function() {",
+							"    pm.expect(pm.response.json().creator.fullName).to.equal(\"Svend White\");",
+							"});",
+							"",
+							"pm.test(\"Confirm title is right\", function() {",
+							"    pm.expect(pm.response.json().title).to.equal(\"Bambi 1\");",
 							"});"
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "httpbin.org/get?foo=bar",
-					"host": [
-						"httpbin",
-						"org"
-					],
-					"path": [
-						"get"
-					],
-					"query": [
-						{
-							"key": "foo",
-							"value": "bar"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Created bambi link",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -60,7 +65,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\",\"title\":\"Bambi in trouble\"}"
+					"raw": "{\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\",\"title\":\"Bambi 1\"}"
 				},
 				"url": {
 					"raw": "https://api.rebrandly.com/v1/links",
