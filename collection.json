@@ -13,11 +13,14 @@
 					"script": {
 						"id": "f6ce0fc3-da4c-4909-bc42-12a590df1650",
 						"exec": [
-							"pm.globals.set(\"variable_key\", \"variable_value\");",
 							"",
+							"pm.globals.set(\"InitialLinkUrl\", \"https://www.temp.com\");",
 							"",
-							"// This function searches for the variable across globals and the active environment.",
-							"//var value = pm.variables.get(\"variable_key\");"
+							"pm.globals.set(\"InitialLinkTitle\", \"Bambi 1\");",
+							"",
+							"pm.globals.set(\"CreatorFullName\", \"Svend White\");",
+							"",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -27,24 +30,22 @@
 					"script": {
 						"id": "8dbc5760-ad5b-44a6-af84-cf244a362642",
 						"exec": [
-							"//get new ID",
+							"// Extract data from response",
 							"pm.globals.set(\"globalid\", pm.response.json().id);",
+							"pm.globals.set(\"ShortUrl\", pm.response.json().shortUrl);",
 							"",
-							"//populate variable for use by other requests",
-							"console.log(pm.globals.get(\"globalid\"));",
-							"",
-							"",
-							"",
+							"//Tests",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
+							"",
 							"pm.test(\"Confirm link was assigned to me\", function() {",
-							"    pm.expect(pm.response.json().creator.fullName).to.equal(\"Svend White\");",
+							"    pm.expect(pm.response.json().creator.fullName).to.equal(pm.globals.get(\"CreatorFullName\"));",
 							"});",
 							"",
 							"pm.test(\"Confirm title is right\", function() {",
-							"    pm.expect(pm.response.json().title).to.equal(\"Bambi 1\");",
+							"    pm.expect(pm.response.json().title).to.equal(pm.globals.get(\"InitialLinkTitle\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -65,7 +66,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\",\"title\":\"Bambi 1\"}"
+					"raw": "{\"destination\":\"{{InitialLinkUrl}}\",\"title\":\"{{InitialLinkTitle}}\"}"
 				},
 				"url": {
 					"raw": "https://api.rebrandly.com/v1/links",
@@ -96,10 +97,22 @@
 							"});",
 							"",
 							"",
-							"pm.test(\"Confirm title is right\", function() {",
-							"    pm.expect(pm.response.json().title).to.equal(\"Bambi 2\");",
+							"pm.test(\"Confirm updated title is right\", function() {",
+							"    pm.expect(pm.response.json().title).to.equal(pm.globals.get(\"FinalLinkTitle\"));",
 							"});",
 							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "536aedf1-9549-427f-b4a6-eb7fab55ae33",
+						"exec": [
+							"pm.globals.set(\"FinalLinkTitle\", \"Bambi 2\");",
+							"",
+							"pm.globals.set(\"FinalLinkUrl\",  \"https://www.youtube.com/watch?v=n-wUdetAAlY\");"
 						],
 						"type": "text/javascript"
 					}
@@ -119,7 +132,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"title\":\"Bambi 2\",\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\"}"
+					"raw": "{\"title\":\"{{FinalLinkTitle}}\",\"destination\":\"{{FinalLinkUrl}}\"}"
 				},
 				"url": {
 					"raw": "https://api.rebrandly.com/v1/links/{{globalid}}",
