@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "77c913c2-a896-478a-afdc-1d6ab36d70d4",
-		"name": "Docker test collection",
+		"_postman_id": "59b695ac-6b36-4b9a-bdd9-99197e397187",
+		"name": "TopTal",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "82ba127d-283a-4514-8b34-a9a47c1135d3",
+						"id": "eac54c9a-9794-48d7-a0bf-ff7215259328",
 						"exec": [
 							"pm.test(\"Your test name\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -25,10 +25,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "httpbin.org/get?foo=bar",
 					"host": [
@@ -47,6 +43,194 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Created bambi link",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "5e7d052cf780407bb83e9f70f0dfff73"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\",\"title\":\"Bambi in trouble\"}"
+				},
+				"url": {
+					"raw": "https://api.rebrandly.com/v1/links",
+					"protocol": "https",
+					"host": [
+						"api",
+						"rebrandly",
+						"com"
+					],
+					"path": [
+						"v1",
+						"links"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update bambi link",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0d6bde1-cec3-4a72-b690-c2279727fb56",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Confirm title is right\", function() {",
+							"    pm.expect(pm.response.json().title).to.equal(\"Bambi 2\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "5e7d052cf780407bb83e9f70f0dfff73"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"Bambi 2\",\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\"}"
+				},
+				"url": {
+					"raw": "https://api.rebrandly.com/v1/links/{{globalid}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"rebrandly",
+						"com"
+					],
+					"path": [
+						"v1",
+						"links",
+						"{{globalid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed update w 401 Unauthorized due to invalid API Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24221d98-3153-4217-b767-d578edd99d52",
+						"exec": [
+							"pm.test(\"Status code is 401 Unauthorized\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "5e7d052cf780407bb83e9f70f0dfff73_ZZZZZZZZ"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"Bambi gets squashed\",\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\"}"
+				},
+				"url": {
+					"raw": "https://api.rebrandly.com/v1/links/fcd27027563e48daa0eef44213fb9f11",
+					"protocol": "https",
+					"host": [
+						"api",
+						"rebrandly",
+						"com"
+					],
+					"path": [
+						"v1",
+						"links",
+						"fcd27027563e48daa0eef44213fb9f11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed update w 403 Forbidden error due to invalid link ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a57c5770-92b2-4ba1-aa62-48d6c34d8334",
+						"exec": [
+							"pm.test(\"Status code is 403 Forbidden\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "5e7d052cf780407bb83e9f70f0dfff73"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"Bambi gets squashed\",\"destination\":\"https://www.youtube.com/watch?v=n-wUdetAAlY\"}"
+				},
+				"url": {
+					"raw": "https://api.rebrandly.com/v1/links/fcd27027563e48daa0eef44213fb9f11zzzzzz",
+					"protocol": "https",
+					"host": [
+						"api",
+						"rebrandly",
+						"com"
+					],
+					"path": [
+						"v1",
+						"links",
+						"fcd27027563e48daa0eef44213fb9f11zzzzzz"
+					]
+				}
+			},
+			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
