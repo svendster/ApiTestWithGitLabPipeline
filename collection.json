@@ -84,7 +84,7 @@
 			"response": []
 		},
 		{
-			"name": "Update bambi link",
+			"name": "Update link title",
 			"event": [
 				{
 					"listen": "test",
