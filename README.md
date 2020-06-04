@@ -1,5 +1,5 @@
 # GitLabApi
 
-This solution has a Postman collection which runs some tests on an API and generates a report. 
+This solution has a Postman collection which does some operations using a public API (Rebrandly), tests the output and generates a report. 
 
 The .yml file makes it run in a GitLab pipeline.
